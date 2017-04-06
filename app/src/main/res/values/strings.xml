@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MovieViewR</string>
+    <string name="error_message">Huge Error</string>
 </resources>
