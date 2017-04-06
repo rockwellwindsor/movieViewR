@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
          * parameter is useful mostly for HORIZONTAL layouts that should reverse for right to left
          * languages.
          */
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
 
         /*
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         protected void onPostExecute(String[] movieData) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (movieData != null) {
+//                Log.d(TAG, "MOVIE DATA? : " + movieData);
                 showMovieDataView();
                 mMovieAdapter.setMovieData(movieData);
             } else {

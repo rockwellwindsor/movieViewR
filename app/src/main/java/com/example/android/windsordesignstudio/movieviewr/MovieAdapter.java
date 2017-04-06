@@ -2,10 +2,12 @@ package com.example.android.windsordesignstudio.movieviewr;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -37,11 +39,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      * Cache of the children views for a forecast list item.
      */
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
-        public final TextView mWeatherTextView;
+        public final TextView mMovieTextView;
+        public final ImageView mMoviePoster;
 
         public MovieAdapterViewHolder(View view) {
             super(view);
-            mWeatherTextView = (TextView) view.findViewById(R.id.viewr_movie_data);
+            mMovieTextView = (TextView) view.findViewById(R.id.viewr_movie_data);
+            mMoviePoster = (ImageView) view.findViewById(R.id.viewr_movie_data_poster);
             view.setOnClickListener(this);
         }
 
@@ -91,7 +95,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
         String movie = mMovieData[position];
-        movieAdapterViewHolder.mWeatherTextView.setText(movie);
+        Log.d(TAG, "HERE : " + movie);
+        movieAdapterViewHolder.mMovieTextView.setText(movie);
     }
 
     /**
