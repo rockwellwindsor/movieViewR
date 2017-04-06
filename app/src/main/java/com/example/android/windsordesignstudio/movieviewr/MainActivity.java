@@ -90,8 +90,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
      */
     private void loadMovieData() {
         showMovieDataView();
-
-        String typeOfQuery = "popular";
+        String typeOfQuery = "popular"; // Popular and Top-Rated will need to be set onClick
         new FetchMovieTask().execute(typeOfQuery);
     }
 
@@ -134,17 +133,15 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
 
         @Override
         protected String[] doInBackground(String... params) {
+
             URL movieRequestUrl = NetworkUtils.buildUrl("popular?api_key=");
             try {
                 String jsonMovieResponse = NetworkUtils
                     .getResponseFromHttpUrl(movieRequestUrl);
 
-//                Log.d(TAG, "HERE jsonMovieResponse : " + jsonMovieResponse);
-
                 String[] simpleJsonMovieData = OpenMovieJsonUtils
                     .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
 
-//                Log.d(TAG, "HERE simpleJsonMovieData: " + simpleJsonMovieData);
                 return simpleJsonMovieData;
 
             } catch (Exception e) {
@@ -160,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 showMovieDataView();
                 mMovieAdapter.setMovieData(movieData);
             } else {
-//                Log.d(TAG, "HERE : no movie data");
                 showErrorMessage();
             }
         }

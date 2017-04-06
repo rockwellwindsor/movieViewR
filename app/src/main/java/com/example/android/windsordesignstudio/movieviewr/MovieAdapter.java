@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder>{
 
+    private static final String TAG = MovieAdapter.class.getSimpleName();
+
     private String[] mMovieData;
 
     /*
@@ -118,6 +120,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      */
     public void setMovieData(String[] movieData) {
         mMovieData = movieData;
+//        Log.d(TAG, "HERE : " + Arrays.toString(mMovieData));
         notifyDataSetChanged();
     }
 }

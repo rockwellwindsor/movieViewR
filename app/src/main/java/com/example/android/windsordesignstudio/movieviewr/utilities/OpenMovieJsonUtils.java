@@ -51,11 +51,8 @@ public final class OpenMovieJsonUtils {
 
         parsedMovieData = new String[movieArray.length()];
 
-
         // Loop through the array
         for (int i = 0; i < movieArray.length(); i++) {
-            // Set up variables
-            String title;
 
             JSONObject movieDetails = movieArray.getJSONObject(i);
 
@@ -64,12 +61,12 @@ public final class OpenMovieJsonUtils {
             String movieVoteAverage = movieDetails.getString("vote_average");
             String moviePlot = movieDetails.getString("overview");
             String movieReleaseDate = movieDetails.getString("release_date");
-            Log.d(TAG, "Movie Data Needed : " + movieTitle + " - " + moviePosterPath + " - " + movieVoteAverage + " - " + moviePlot + " - " + movieReleaseDate);
-//            JSONObject movieObject = movieDetails.getJSONObject("overview");
+//            Log.d(TAG, "Movie Data Needed : " + movieTitle + " - " + moviePosterPath + " - " + movieVoteAverage + " - " + moviePlot + " - " + movieReleaseDate);
+
+            parsedMovieData[i] = movieTitle + " - " + moviePosterPath + " - " + movieVoteAverage + " - " + moviePlot + " - " + movieReleaseDate;
 
         }
-
-        return null;
+        return parsedMovieData;
 
     }
 }
