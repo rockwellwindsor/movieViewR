@@ -18,15 +18,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     private String[] mMovieData;
 
-    /*
-     * An on-click handler that we've defined to make it easy for an Activity to interface with
-     * our RecyclerView
-     */
     private final MovieAdapterOnClickHandler mClickHandler;
 
-    /**
-     * The interface that receives onClick messages.
-     */
+
     public interface MovieAdapterOnClickHandler {
         void onClick(String movie);
     }
