@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -19,6 +22,8 @@ import com.example.android.windsordesignstudio.movieviewr.utilities.OpenMovieJso
 
 import java.net.URL;
 
+import static com.example.android.windsordesignstudio.movieviewr.utilities.NetworkUtils.buildUrl;
+
 public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -26,12 +31,56 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     private TextView mErrorMessageDisplay;
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        // Add the tabs
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Popular")); // This returns 0 when clicked
+        tabLayout.addTab(tabLayout.newTab().setText("Highest Rating")); // This returns 1 when clicked
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int mPosition = tab.getPosition();
+                viewPager.setCurrentItem(tab.getPosition());
+                if (mPosition == 1) {
+                    // Show highest rated movies
+                    Log.d(TAG, "HERE : HIGHEST RATED MOVIES UP");
+                    NetworkUtils.buildUrl("top_rated");
+                } else {
+                    // Show popular movies
+                    Log.d(TAG, "HERE : POPULAR MOVIES UP");
+                    NetworkUtils.buildUrl("popular");
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         /*
          *  Create a variable to reference the RecyclerView.
          */
@@ -79,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
      */
     @Override
     public void onClick(String movie) {
-        Log.d(TAG, "HERE : " + movie.toString());
         Context context = this;
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
@@ -93,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
      */
     private void loadMovieData() {
         showMovieDataView();
-        String typeOfQuery = "popular"; // Popular and Top-Rated will need to be set onClick
+        String typeOfQuery = "top_rated"; // Popular and Top-Rated will need to be set onClick
         new FetchMovieTask().execute(typeOfQuery);
     }
 
@@ -137,7 +185,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         @Override
         protected String[] doInBackground(String... params) {
 
-            URL movieRequestUrl = NetworkUtils.buildUrl("popular?api_key=");
+            URL movieRequestUrl = buildUrl("popular?api_key="); // MAGIC
+
             try {
                 String jsonMovieResponse = NetworkUtils
                     .getResponseFromHttpUrl(movieRequestUrl);

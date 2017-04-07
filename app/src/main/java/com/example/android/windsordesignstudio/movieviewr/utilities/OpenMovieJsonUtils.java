@@ -19,7 +19,6 @@ public final class OpenMovieJsonUtils {
     public static String[] getSimpleMovieStringsFromJson(Context context, String movieJsonStr)
             throws JSONException {
 
-//        Log.d(TAG, "HERE : " + movieJsonStr );
         final String OWM_MESSAGE_CODE = "cod";
         final String OWM_LIST = "list";
 
@@ -67,6 +66,7 @@ public final class OpenMovieJsonUtils {
             parsedMovieData[i] = movieTitle + " - " + fullMoviePosterPath + " - " + movieVoteAverage + " - " + moviePlot + " - " + movieReleaseDate;
 
         }
+
         return parsedMovieData;
 
     }

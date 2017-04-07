@@ -2,7 +2,6 @@ package com.example.android.windsordesignstudio.movieviewr;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -94,7 +93,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
         String movie = mMovieData[position];
-        Log.d(TAG, "HERE : " + movie);
+//        Log.d(TAG, "HERE : " + movie);
 //        Picasso.load(movie.get("profile_image")).into(R.id.viewr_movie_data_poster);
         movieAdapterViewHolder.mMovieTextView.setText(movie);
     }

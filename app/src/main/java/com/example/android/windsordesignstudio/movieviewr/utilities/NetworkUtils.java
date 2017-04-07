@@ -39,16 +39,17 @@ public class NetworkUtils {
 //                .appendQueryParameter(POPULAR_MOVIES, typeOfQuery)
 //                .appendQueryParameter(API_KEY, apiKey)
 //                .build();
-
+        Log.d(TAG, "HERE : ARRIVED AT NETWORKUTILS : " + typeOfQuery );
         URL url = null;
 
         try {
-            url = new URL("http://api.themoviedb.org/3/movie/popular?api_key=3c6092d60715cfad623d1afe909fe090");
+            Log.d(TAG, "HERE : GOT HERE?");
+            url = new URL("http://api.themoviedb.org/3/movie/" + typeOfQuery + "3c6092d60715cfad623d1afe909fe090");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
-        Log.d(TAG, "Built URI " + url);
+        Log.d(TAG, "HERE : URI " + url);
 
         return url;
     }
