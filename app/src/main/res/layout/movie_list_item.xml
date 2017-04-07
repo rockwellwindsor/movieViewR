@@ -16,6 +16,7 @@
         android:id="@+id/viewr_movie_data_poster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
     <!--This View serves as a visual divider between list items-->
     <View
         android:layout_width="match_parent"

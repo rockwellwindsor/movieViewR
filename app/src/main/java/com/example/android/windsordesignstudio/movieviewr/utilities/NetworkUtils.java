@@ -1,6 +1,5 @@
 package com.example.android.windsordesignstudio.movieviewr.utilities;
 
-import android.net.Uri;
 import android.util.Log;
 
 import java.io.IOException;
@@ -25,9 +24,6 @@ public class NetworkUtils {
 
     final static String TOP_RATED_MOVIES = "top_rated?api_key=";
     final static String POPULAR_MOVIES = "popular?api_key=";
-    // API_MARK
-    final static String API_KEY = "3c6092d60715cfad623d1afe909fe090";
-    private static final String apiKey = "3c6092d60715cfad623d1afe909fe090";
 
     // The format we want our API to return
     private static final String format = "json";
@@ -39,10 +35,10 @@ public class NetworkUtils {
      * @return The URL to use to query the movie server.
      */
     public static URL buildUrl(String typeOfQuery) {
-        Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
-                .appendQueryParameter(POPULAR_MOVIES, typeOfQuery)
-                .appendQueryParameter(API_KEY, apiKey)
-                .build();
+//        Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+//                .appendQueryParameter(POPULAR_MOVIES, typeOfQuery)
+//                .appendQueryParameter(API_KEY, apiKey)
+//                .build();
 
         URL url = null;
 

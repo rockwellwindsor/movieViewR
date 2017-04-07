@@ -19,7 +19,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private static final String TAG = MovieAdapter.class.getSimpleName();
 
     private String[] mMovieData;
-
     private final MovieAdapterOnClickHandler mClickHandler;
 
 
@@ -96,6 +95,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
         String movie = mMovieData[position];
         Log.d(TAG, "HERE : " + movie);
+//        Picasso.load(movie.get("profile_image")).into(R.id.viewr_movie_data_poster);
         movieAdapterViewHolder.mMovieTextView.setText(movie);
     }
 

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -74,10 +75,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
      * This method is overridden by our MainActivity class in order to handle RecyclerView item
      * clicks.
      *
-     * @param movie The weather for the day that was clicked
+     * @param movie The movie that was clicked
      */
     @Override
     public void onClick(String movie) {
+        Log.d(TAG, "HERE : " + movie.toString());
         Context context = this;
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
