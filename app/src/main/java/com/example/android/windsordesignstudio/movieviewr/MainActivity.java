@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 viewPager.setCurrentItem(tab.getPosition());
                 if (mPosition == 1) {
                     // Show highest rated movies
-                    Log.d(TAG, "HERE : HIGHEST RATED MOVIES UP");
-                    NetworkUtils.buildUrl("top_rated");
+//                    Log.d(TAG, "HERE : HIGHEST RATED MOVIES UP");
+                    loadMovieData("top_rated");
                 } else {
                     // Show popular movies
-                    Log.d(TAG, "HERE : POPULAR MOVIES UP");
-                    NetworkUtils.buildUrl("popular");
+//                    Log.d(TAG, "HERE : POPULAR MOVIES UP");
+                    loadMovieData("popular");
                 }
             }
 
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
          */
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
-        loadMovieData();
+        loadMovieData("popular"); // MAGIC
     }
 
     /**
@@ -139,9 +139,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
      * This method will get the user's preferred location for weather, and then tell some
      * background method to get the weather data in the background.
      */
-    private void loadMovieData() {
+    private void loadMovieData(String preference) {
         showMovieDataView();
-        String typeOfQuery = "top_rated"; // Popular and Top-Rated will need to be set onClick
+        String typeOfQuery = preference; // Popular and Top-Rated will need to be set onClick
         new FetchMovieTask().execute(typeOfQuery);
     }
 
@@ -184,8 +184,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
 
         @Override
         protected String[] doInBackground(String... params) {
-
-            URL movieRequestUrl = buildUrl("popular?api_key="); // MAGIC
+            String preference = params[0].toString();
+            Log.d(TAG, "HERE : " + preference);
+            URL movieRequestUrl = buildUrl(preference);
 
             try {
                 String jsonMovieResponse = NetworkUtils
@@ -206,7 +207,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         protected void onPostExecute(String[] movieData) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (movieData != null) {
-//                Log.d(TAG, "MOVIE DATA? : " + movieData);
                 showMovieDataView();
                 mMovieAdapter.setMovieData(movieData);
             } else {

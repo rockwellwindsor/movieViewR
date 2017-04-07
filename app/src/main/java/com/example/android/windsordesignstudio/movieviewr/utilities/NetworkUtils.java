@@ -43,8 +43,8 @@ public class NetworkUtils {
         URL url = null;
 
         try {
-            Log.d(TAG, "HERE : GOT HERE?");
-            url = new URL("http://api.themoviedb.org/3/movie/" + typeOfQuery + "3c6092d60715cfad623d1afe909fe090");
+//            Log.d(TAG, "HERE : GOT HERE?");
+            url = new URL("http://api.themoviedb.org/3/movie/" + typeOfQuery + "?api_key=3c6092d60715cfad623d1afe909fe090");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
