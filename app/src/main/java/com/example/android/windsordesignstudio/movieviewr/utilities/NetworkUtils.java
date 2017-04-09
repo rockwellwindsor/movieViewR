@@ -1,7 +1,5 @@
 package com.example.android.windsordesignstudio.movieviewr.utilities;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -39,7 +37,7 @@ public class NetworkUtils {
 //                .appendQueryParameter(POPULAR_MOVIES, typeOfQuery)
 //                .appendQueryParameter(API_KEY, apiKey)
 //                .build();
-        Log.d(TAG, "HERE : ARRIVED AT NETWORKUTILS : " + typeOfQuery );
+//        Log.d(TAG, "HERE : ARRIVED AT NETWORKUTILS : " + typeOfQuery );
         URL url = null;
 
         try {
@@ -49,7 +47,7 @@ public class NetworkUtils {
             e.printStackTrace();
         }
 
-        Log.d(TAG, "HERE : URI " + url);
+//        Log.d(TAG, "HERE : URI " + url);
 
         return url;
     }

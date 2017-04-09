@@ -2,12 +2,18 @@ package com.example.android.windsordesignstudio.movieviewr;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * Created by Rockwell Rice on 4/5/17.
@@ -93,9 +99,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
         String movie = mMovieData[position];
-//        Log.d(TAG, "HERE : " + movie);
-//        Picasso.load(movie.get("profile_image")).into(R.id.viewr_movie_data_poster);
-        movieAdapterViewHolder.mMovieTextView.setText(movie);
+
+        Context context = movieAdapterViewHolder.mMoviePoster.getContext();
+
+        try {
+            JSONArray jsonArray = new JSONArray(movie);
+            movieAdapterViewHolder.mMovieTextView.setText(jsonArray.getString(0));
+            try {
+                Picasso.with(context).load(jsonArray.getString(1)).into(movieAdapterViewHolder.mMoviePoster);
+            } catch (Exception e) {
+                Log.d(TAG, "HERE : LOSE");
+                e.printStackTrace();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -118,7 +136,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      */
     public void setMovieData(String[] movieData) {
         mMovieData = movieData;
-//        Log.d(TAG, "HERE : " + Arrays.toString(mMovieData));
+
         notifyDataSetChanged();
     }
 }

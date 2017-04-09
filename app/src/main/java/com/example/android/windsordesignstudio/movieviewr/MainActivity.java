@@ -11,7 +11,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -185,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         @Override
         protected String[] doInBackground(String... params) {
             String preference = params[0].toString();
-            Log.d(TAG, "HERE : " + preference);
+//            Log.d(TAG, "HERE : " + preference);
             URL movieRequestUrl = buildUrl(preference);
 
             try {

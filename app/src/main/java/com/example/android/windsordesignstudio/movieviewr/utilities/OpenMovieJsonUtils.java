@@ -63,7 +63,7 @@ public final class OpenMovieJsonUtils {
             String movieReleaseDate = movieDetails.getString("release_date");
 //            Log.d(TAG, "Movie Data Needed : " + movieTitle + " - " + moviePosterPath + " - " + movieVoteAverage + " - " + moviePlot + " - " + movieReleaseDate);
 
-            parsedMovieData[i] = movieTitle + " - " + fullMoviePosterPath + " - " + movieVoteAverage + " - " + moviePlot + " - " + movieReleaseDate;
+            parsedMovieData[i] = "[\"" + movieTitle + "\",\"" + fullMoviePosterPath + "\",\"" + movieVoteAverage + "\",\"" + moviePlot + "\",\"" + movieReleaseDate + "\"]";
 
         }
 
