@@ -22,7 +22,7 @@ public class NetworkUtils {
 
     // The format we want our API to return
     private static final String format = "json";
-    private static final String APIKey = "3c6092d60715cfad623d1afe909fe090";
+    private static final String APIKey = "";
 
     /**
      * Builds the URL used to talk to the movie API.
@@ -32,6 +32,7 @@ public class NetworkUtils {
      *
      * This is a simplified version of the buildUrl method from the course material.
      * I did not need as many parameters so I simplified it to just the type of query needed.
+     *
      */
     public static URL buildUrl(String typeOfQuery) {
         URL url = null;
