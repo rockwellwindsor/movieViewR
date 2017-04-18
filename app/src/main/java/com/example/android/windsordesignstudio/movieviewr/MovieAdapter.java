@@ -74,7 +74,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             JSONArray jsonArray = new JSONArray(movie);
             try {
                 // Using Picasso to set the poster image in the ImageView
-                Picasso.with(context).load(jsonArray.getString(1)).into(movieAdapterViewHolder.mMoviePoster);
+                Picasso.with(context).load(jsonArray.getString(1)).resize(600, 900).into(movieAdapterViewHolder.mMoviePoster);
             } catch (Exception e) {
                 e.printStackTrace();
             }
