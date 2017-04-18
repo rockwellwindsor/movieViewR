@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
     private Toolbar toolbar;
-    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +60,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 viewPager.setCurrentItem(tab.getPosition());
                 if (mPosition == 1) {
                     // Show highest rated movies
-//                    Log.d(TAG, "HERE : HIGHEST RATED MOVIES UP");
                     loadMovieData("top_rated");
                 } else {
                     // Show popular movies
-//                    Log.d(TAG, "HERE : POPULAR MOVIES UP");
                     loadMovieData("popular");
                 }
             }
@@ -86,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movie);
 
         /*
-        *   This TextView is used to display errors and will be hidden if there are no errors
+        *  This TextView is used to display errors and will be hidden if there are no errors
         */
         mErrorMessageDisplay = (TextView) findViewById(R.id.viewr_error_message_display);
 
@@ -114,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
          */
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
-        loadMovieData("popular"); // MAGIC
+        loadMovieData("popular"); // Setting popular movies as the default movie filter
     }
 
     /**
@@ -133,8 +130,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     }
 
     /**
-     * This method will get the user's preferred location for weather, and then tell some
-     * background method to get the weather data in the background.
+     * This method will get the user's preferred for displaying the movies.  Currently
+     * only tow options available: popular movies and highest rated movies.
      */
     private void loadMovieData(String preference) {
         showMovieDataView();
@@ -143,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     }
 
     /**
-     * This method will make the View for the weather data visible and
+     * This method will make the View for the movie data visible and
      * hide the error message.
      * <p>
      * Since it is okay to redundantly set the visibility of a View, we don't
@@ -157,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     }
 
     /**
-     * This method will make the error message visible and hide the weather
+     * This method will make the error message visible and hide the movie
      * View.
      * <p>
      * Since it is okay to redundantly set the visibility of a View, we don't
@@ -182,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         @Override
         protected String[] doInBackground(String... params) {
             String preference = params[0].toString();
-//            Log.d(TAG, "HERE : " + preference);
             URL movieRequestUrl = buildUrl(preference);
 
             try {

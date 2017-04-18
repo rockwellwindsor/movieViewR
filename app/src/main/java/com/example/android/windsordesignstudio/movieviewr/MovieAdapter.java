@@ -2,7 +2,6 @@ package com.example.android.windsordesignstudio.movieviewr;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +15,9 @@ import org.json.JSONException;
 
 /**
  * Created by Rockwell Rice on 4/5/17.
+ *
+ * This code was inspired by, sometimes taken directly from, the course material for the first project
+ *
  */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder>{
@@ -24,7 +26,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     private String[] mMovieData;
     private final MovieAdapterOnClickHandler mClickHandler;
-
 
     public interface MovieAdapterOnClickHandler {
         void onClick(String movie);
@@ -35,12 +36,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
-//        public final TextView mMovieTextView;
         public final ImageView mMoviePoster;
 
         public MovieAdapterViewHolder(View view) {
             super(view);
-//            mMovieTextView = (TextView) view.findViewById(R.id.viewr_movie_data);
+            // Grabbing the ImageView and setting an onClick listener
             mMoviePoster = (ImageView) view.findViewById(R.id.viewr_movie_data_poster);
             view.setOnClickListener(this);
         }
@@ -72,11 +72,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         try {
             JSONArray jsonArray = new JSONArray(movie);
-//            movieAdapterViewHolder.mMovieTextView.setText(jsonArray.getString(0));
             try {
+                // Using Picasso to set the poster image in the ImageView
                 Picasso.with(context).load(jsonArray.getString(1)).into(movieAdapterViewHolder.mMoviePoster);
             } catch (Exception e) {
-                Log.d(TAG, "HERE : LOSE");
                 e.printStackTrace();
             }
         } catch (JSONException e) {
@@ -88,7 +87,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      * This method simply returns the number of items to display. It is used behind the scenes
      * to help layout our Views and for animations.
      *
-     * @return The number of items available in our forecast
+     * @return The number of items available in our movie
+     *
+     * This code was taken directly from the course material
      */
     @Override
     public int getItemCount() {
@@ -96,11 +97,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         return mMovieData.length;
     }
     /**
-     * This method is used to set the weather forecast on a ForecastAdapter if we've already
+     * This method is used to set the movie data on a MovieAdapter if we've already
      * created one. This is handy when we get new data from the web but don't want to create a
-     * new ForecastAdapter to display it.
+     * new MovieAdapter to display it.
      *
      * @param movieData The new weather data to be displayed.
+     *
+     * This code was taken directly from the course material
      */
     public void setMovieData(String[] movieData) {
         mMovieData = movieData;

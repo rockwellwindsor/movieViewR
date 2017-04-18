@@ -24,7 +24,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
+        // Creating variables for each of the items we need to display
         mMovieTitle = (TextView) findViewById(R.id.viewr_display_movie_title);
         mMovieRating = (TextView) findViewById(R.id.viewr_display_movie_rating);
         mMovieRelease = (TextView) findViewById(R.id.viewr_display_movie_release);
@@ -38,9 +38,13 @@ public class DetailActivity extends AppCompatActivity {
                 mMovie = intentThatStartedThisActivity.getStringExtra(Intent.EXTRA_TEXT);
                 try {
                     JSONArray jsonArray = new JSONArray(mMovie);
+                    // Display title
                     mMovieTitle.setText("Title : " + jsonArray.getString(0));
+                    // Display the Rating
                     mMovieRating.setText("Rating : " + jsonArray.getString(2));
+                    // Display the plot synopsis
                     mMovieDescription.setText("Synopsis : " + jsonArray.getString(3));
+                    // Display the release date
                     mMovieRelease.setText("Released : " +jsonArray.getString(4));
                 } catch (JSONException e) {
                     e.printStackTrace();

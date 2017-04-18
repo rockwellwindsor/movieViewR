@@ -1,7 +1,6 @@
 package com.example.android.windsordesignstudio.movieviewr.utilities;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,6 +10,8 @@ import java.net.HttpURLConnection;
 
 /**
  * Created by Rockwell Rice on 4/5/17.
+ *
+ * This code was relied heavily on the code from the course material.
  */
 public final class OpenMovieJsonUtils {
 
@@ -32,15 +33,15 @@ public final class OpenMovieJsonUtils {
 
             switch (errorCode) {
                 case HttpURLConnection.HTTP_OK:
-                    Log.d(TAG, "OK ?");
+//                    Log.d(TAG, "OK ?");
                     break;
                 case HttpURLConnection.HTTP_NOT_FOUND:
                     /* Location invalid */
-                    Log.d(TAG, "NOT OK ?");
+//                    Log.d(TAG, "NOT OK ?");
                     return null;
                 default:
                     /* Server probably down */
-                    Log.d(TAG, "REALLY NOT OK ?");
+//                    Log.d(TAG, "REALLY NOT OK ?");
                     return null;
             }
         }
@@ -61,7 +62,6 @@ public final class OpenMovieJsonUtils {
             String movieVoteAverage = movieDetails.getString("vote_average");
             String moviePlot = movieDetails.getString("overview");
             String movieReleaseDate = movieDetails.getString("release_date");
-//            Log.d(TAG, "Movie Data Needed : " + movieTitle + " - " + moviePosterPath + " - " + movieVoteAverage + " - " + moviePlot + " - " + movieReleaseDate);
 
             parsedMovieData[i] = "[\"" + movieTitle + "\",\"" + fullMoviePosterPath + "\",\"" + movieVoteAverage + "\",\"" + moviePlot + "\",\"" + movieReleaseDate + "\"]";
 
