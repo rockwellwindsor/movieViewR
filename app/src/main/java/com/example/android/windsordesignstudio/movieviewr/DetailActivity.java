@@ -52,7 +52,7 @@ public class DetailActivity extends AppCompatActivity {
                 try {
                     JSONArray jsonArray = new JSONArray(mMovie);
                     // Display title
-                    mMovieTitle.setText("Title : " + jsonArray.getString(0));
+                    mMovieTitle.setText(jsonArray.getString(0));
                     // Display the Poster
                     // Using Picasso to set the poster image in the ImageView
                     Picasso.with(context).load(jsonArray.getString(1)).resize(600, 900).into(mMovieImage);
@@ -61,7 +61,7 @@ public class DetailActivity extends AppCompatActivity {
                     // Display the plot synopsis
                     mMovieDescription.setText("Synopsis : " + jsonArray.getString(3));
                     // Display the release date
-                    mMovieRelease.setText("Release Date : " +jsonArray.getString(4));
+                    mMovieRelease.setText(jsonArray.getString(4));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
