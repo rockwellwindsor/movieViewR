@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
         // Creating variables for each of the items we need to display
         mMovieTitle = (TextView) findViewById(R.id.viewr_display_movie_title);
         mMovieRating = (TextView) findViewById(R.id.viewr_display_movie_rating);
@@ -72,5 +75,22 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         }
+
+        // set onclick listener for the buttons
+        mViewTrailerButton = (Button) findViewById(R.id.view_trailer_button);
+
+        mViewTrailerButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d(TAG, "Pressed to view trailer.");
+            }
+        });
+
+        mViewReviewsButton = (Button) findViewById(R.id.view_reviews_button);
+        mViewReviewsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d(TAG, "Pressed to view reviews.");
+            }
+        });
+
     }
 }
