@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class DetailActivity extends AppCompatActivity {
     public TextView mMovieRelease;
     public TextView mMovieTitle;
     public TextView mMovieDescription;
+    public Button mViewTrailerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class DetailActivity extends AppCompatActivity {
         mMovieRelease = (TextView) findViewById(R.id.viewr_display_movie_release);
         mMovieDescription = (TextView) findViewById(R.id.viewr_display_movie_desc);
         mMovieImage = (ImageView) findViewById(R.id.viewr_display_movie_image);
+        mViewTrailerButton = (Button) findViewById(R.id.view_trailer_button);
 
         Intent intentThatStartedThisActivity = getIntent();
 
