@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Popular")); // This returns 0 when clicked
         tabLayout.addTab(tabLayout.newTab().setText("Highest Rating")); // This returns 1 when clicked
+        tabLayout.addTab(tabLayout.newTab().setText("Favorites")); // This returns 2 when clicked
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -61,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 if (mPosition == 1) {
                     // Show highest rated movies
                     loadMovieData("top_rated");
+                } else if (mPosition == 3) {
+                    // Show favorites
+                    loadMovieData("favorites");
                 } else {
                     // Show popular movies
                     loadMovieData("popular");
