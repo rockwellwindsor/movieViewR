@@ -21,20 +21,43 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <Button
-                android:id="@+id/view_trailer_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/viewr_display_movie_image"
-                android:background="@drawable/button"
-                android:textColor="#FFFFFF"
-                android:text="@string/view_trailer"/>
+                <LinearLayout
+                    android:id="@+id/buttonlinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:layout_below="@+id/viewr_display_movie_image"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/view_trailer_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_below="@+id/viewr_display_movie_image"
+                        android:background="@drawable/button"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/view_trailer"/>
+
+                    <Button
+                        android:id="@+id/view_reviews_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_below="@+id/viewr_display_movie_image"
+                        android:layout_toRightOf="@+id/view_trailer_button"
+                        android:background="@drawable/button"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/view_reviews"/>
+
+                </LinearLayout>
 
             <TextView
                 android:id="@+id/viewr_display_movie_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/view_trailer_button"
+                android:layout_below="@+id/buttonlinearLayout"
                 android:textColor="#000000"
                 android:textSize="32dp"/>
 

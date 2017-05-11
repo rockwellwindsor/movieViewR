@@ -24,6 +24,7 @@ public class DetailActivity extends AppCompatActivity {
     public TextView mMovieTitle;
     public TextView mMovieDescription;
     public Button mViewTrailerButton;
+    public Button mViewReviewsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class DetailActivity extends AppCompatActivity {
         mMovieDescription = (TextView) findViewById(R.id.viewr_display_movie_desc);
         mMovieImage = (ImageView) findViewById(R.id.viewr_display_movie_image);
         mViewTrailerButton = (Button) findViewById(R.id.view_trailer_button);
+        mViewReviewsButton = (Button) findViewById(R.id.view_reviews_button);
 
         Intent intentThatStartedThisActivity = getIntent();
 
