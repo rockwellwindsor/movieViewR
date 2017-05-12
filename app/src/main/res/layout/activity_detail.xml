@@ -92,5 +92,4 @@
                 android:textSize="24dp"/>
         </RelativeLayout>
     </ScrollView>
-
 </LinearLayout>

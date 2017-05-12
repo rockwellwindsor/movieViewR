@@ -109,8 +109,9 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void loadMovieReviews(String id) {
-        Log.d(TAG, "Load the movie that belongs to the id : " + id + "");
-
+        Intent intent = new Intent(this, ReviewActivity.class);
+        startActivity(intent);
+//        Log.d(TAG, "Load the movie that belongs to the id : " + id + "");
     }
 
     private void loadMovieTrailer(String id) {
