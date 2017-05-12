@@ -27,6 +27,7 @@ public class DetailActivity extends AppCompatActivity {
     public TextView mMovieDescription;
     public Button mViewTrailerButton;
     public Button mViewReviewsButton;
+    public TextView mDisplayReviewsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class DetailActivity extends AppCompatActivity {
         mMovieImage = (ImageView) findViewById(R.id.viewr_display_movie_image);
         mViewTrailerButton = (Button) findViewById(R.id.view_trailer_button);
         mViewReviewsButton = (Button) findViewById(R.id.view_reviews_button);
+        mDisplayReviewsTextView = (TextView) findViewById(R.id.viewr_display_movie_review);
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -81,16 +83,37 @@ public class DetailActivity extends AppCompatActivity {
 
         mViewTrailerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d(TAG, "Pressed to view trailer.");
+                try {
+                    JSONArray jsonArray = new JSONArray(mMovie);
+                    String movieID = jsonArray.getString(5);
+                    loadMovieTrailer(movieID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         mViewReviewsButton = (Button) findViewById(R.id.view_reviews_button);
         mViewReviewsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d(TAG, "Pressed to view reviews.");
+                try {
+                    JSONArray jsonArray = new JSONArray(mMovie);
+                    String movieID = jsonArray.getString(5);
+                    loadMovieReviews(movieID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
+    }
+
+    private void loadMovieReviews(String id) {
+        Log.d(TAG, "Load the movie that belongs to the id : " + id + "");
+
+    }
+
+    private void loadMovieTrailer(String id) {
+        Log.d(TAG, "Load the movie that belongs to the id : " + id + "");
     }
 }

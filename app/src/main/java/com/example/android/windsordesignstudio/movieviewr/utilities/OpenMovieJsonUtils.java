@@ -56,6 +56,7 @@ public final class OpenMovieJsonUtils {
 
             JSONObject movieDetails = movieArray.getJSONObject(i);
 
+            String movieID = movieDetails.getString("id");
             String moviePosterPath = movieDetails.getString("poster_path");
             String fullMoviePosterPath = "http://image.tmdb.org/t/p/w185//" + moviePosterPath;
             String movieTitle = movieDetails.getString("title");
@@ -63,7 +64,7 @@ public final class OpenMovieJsonUtils {
             String moviePlot = movieDetails.getString("overview");
             String movieReleaseDate = movieDetails.getString("release_date");
 
-            parsedMovieData[i] = "[\"" + movieTitle + "\",\"" + fullMoviePosterPath + "\",\"" + movieVoteAverage + "\",\"" + moviePlot + "\",\"" + movieReleaseDate + "\"]";
+            parsedMovieData[i] = "[\"" + movieTitle + "\",\"" + fullMoviePosterPath + "\",\"" + movieVoteAverage + "\",\"" + moviePlot + "\",\"" + movieReleaseDate + "\",\"" + movieID + "\"]";
 
         }
 
