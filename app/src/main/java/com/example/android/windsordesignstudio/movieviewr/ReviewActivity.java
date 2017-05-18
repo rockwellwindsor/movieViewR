@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,7 +21,7 @@ import static com.example.android.windsordesignstudio.movieviewr.utilities.Netwo
  * Created by rockwellrice on 5/11/17.
  */
 
-public class ReviewActivity extends AppCompatActivity {
+public class ReviewActivity extends AppCompatActivity implements MovieReviewAdapter.MovieReviewAdapterOnClickHandler {
 
     private static final String TAG = ReviewActivity.class.getSimpleName();
     public String mMovieID;
@@ -32,19 +30,24 @@ public class ReviewActivity extends AppCompatActivity {
     private TextView mReviewView;
     private String[] mMovieReviewsData;
     private RecyclerView mRecyclerView;
+    private MovieReviewAdapter mMovieReviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
 
-
         mErrorMessageDisplay = (TextView) findViewById(R.id.viewr_error_message_display);
-        mReviewView = (TextView) findViewById(R.id.review_movie);
+
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movie_reviews);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
+
+        mMovieReviewAdapter = new MovieReviewAdapter(this);
+
+        mRecyclerView.setAdapter(mMovieReviewAdapter);
 
         Intent intentThatStartedThisActivity = getIntent();
         mMovieID = intentThatStartedThisActivity.getStringExtra(Intent.EXTRA_TEXT);
@@ -65,7 +68,7 @@ public class ReviewActivity extends AppCompatActivity {
 
     private void showErrorMessage() {
         /* First, hide the currently visible data */
-        mReviewView.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
         /* Then, show the error */
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
@@ -81,7 +84,12 @@ public class ReviewActivity extends AppCompatActivity {
         /* First, make sure the error is invisible */
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         /* Then, make sure the weather data is visible */
-        mReviewView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(String movieReview) {
+
     }
 
     public class FetchMovieReviewTask extends AsyncTask<String, Void, String[]> {
@@ -122,10 +130,9 @@ public class ReviewActivity extends AppCompatActivity {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (movieReviewData != null) {
                 showMovieReviewDataView();
-                mMovieReviewsData = movieReviewData;
-
-                mReviewView.setText(mMovieReviewsData[0]);
-
+//                mMovieReviewsData = movieReviewData;
+//                mReviewView.setText(mMovieReviewsData[0]);
+                mMovieReviewAdapter.setMovieReviewData(movieReviewData);
             } else {
                 showErrorMessage();
             }

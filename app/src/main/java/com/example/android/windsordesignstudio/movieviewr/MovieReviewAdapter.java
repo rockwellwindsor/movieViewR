@@ -1,10 +1,15 @@
 package com.example.android.windsordesignstudio.movieviewr;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * Created by rockwellrice on 5/17/17.
@@ -17,6 +22,7 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     private String[] mMovieReviewData;
     private final MovieReviewAdapterOnClickHandler mClickHandler;
 
+
     public interface MovieReviewAdapterOnClickHandler {
         void onClick(String movieReview);
     }
@@ -26,36 +32,64 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     }
 
     public class MovieReviewAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final TextView mMovieReviews;
+
+        public TextView mReviewAuthor;
+        public TextView mReview;
 
         public MovieReviewAdapterViewHolder(View view) {
             super(view);
             // Grabbing the ImageView and setting an onClick listener
-            mMovieReviews = (TextView) view.findViewById(R.id.viewr_movie_data_review);
+            mReviewAuthor = (TextView) view.findViewById(R.id.review_author);
+            mReview = (TextView) view.findViewById(R.id.review_content);
             view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            String selectedMovie = mMovieReviewData[adapterPosition];
-            mClickHandler.onClick(selectedMovie);
+            String selectedMovieReview = mMovieReviewData[adapterPosition];
+            mClickHandler.onClick(selectedMovieReview);
         }
     }
 
     @Override
-    public MovieReviewAdapter.MovieReviewAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+    public MovieReviewAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        Context context = viewGroup.getContext();
+        int layoutIdForListItem = R.layout.movie_review_item;
+        LayoutInflater inflater = LayoutInflater.from(context);
+        boolean shouldAttachToParentImmediately = false;
+
+        View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
+        return new MovieReviewAdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MovieReviewAdapter.MovieReviewAdapterViewHolder holder, int position) {
+        String movie = mMovieReviewData[position];
 
+        Context authorContext = holder.mReviewAuthor.getContext();
+        Context reviewContext = holder.mReview.getContext();
+
+        try {
+            JSONArray jsonArray = new JSONArray(movie);
+            try {
+                // Set the text for the view here
+                Log.d(TAG, "ANYTHING?");
+                holder.mReviewAuthor.setText(jsonArray.getString(0));
+                holder.mReview.setText(jsonArray.getString(1));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        if (null == mMovieReviewData) return 0;
+        Log.d(TAG, "HERE 1 : " + mMovieReviewData.length);
+        return mMovieReviewData.length;
     }
 
     /**
@@ -68,8 +102,8 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
      * This code was taken directly from the course material
      */
     public void setMovieReviewData(String[] movieReviewData) {
-        Log.d(TAG, "HERE : " + movieReviewData.length);
         mMovieReviewData = movieReviewData;
+        Log.d(TAG, "HERE 2 : " + mMovieReviewData.length);
         notifyDataSetChanged();
     }
 }
