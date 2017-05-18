@@ -17,6 +17,46 @@ public final class OpenMovieJsonUtils {
 
     private static final String TAG = OpenMovieJsonUtils.class.getSimpleName();
 
+    public static String[] getSimpleMovieReviewFromJson(Context context, String movieReviewJsonStr)
+            throws JSONException {
+        final String OWM_MESSAGE_CODE = "cod";
+        final String OWM_LIST = "list";
+
+        String[] movieReviewData = null;
+
+        JSONObject movieReviewJSON = new JSONObject(movieReviewJsonStr);
+        /* Is there an error? */
+        if (movieReviewJSON.has(OWM_MESSAGE_CODE)) {
+            int errorCode = movieReviewJSON.getInt(OWM_MESSAGE_CODE);
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    /* Location invalid */
+                    return null;
+                default:
+                    /* Server probably down */
+                    return null;
+            }
+        }
+
+        JSONArray movieReviewArray = movieReviewJSON.getJSONArray("results");
+        movieReviewData = new String[movieReviewArray.length()];
+        // Loop through the array
+        for (int i = 0; i < movieReviewArray.length(); i++) {
+
+            JSONObject movieReviewDetails = movieReviewArray.getJSONObject(i);
+
+            String reviewerName = movieReviewDetails.getString("author");
+            String review = movieReviewDetails.getString("content");
+
+            movieReviewData[i] = "[\"" + reviewerName + "\",\"" + review + "\"]";
+        }
+
+        return movieReviewData;
+    }
+
     public static String[] getSimpleMovieStringsFromJson(Context context, String movieJsonStr)
             throws JSONException {
 

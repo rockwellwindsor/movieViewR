@@ -45,6 +45,20 @@ public class NetworkUtils {
 
         return url;
     }
+
+    public static URL buildReviewUrl(String id) {
+        URL url = null;
+
+        try {
+            url = new URL("http://api.themoviedb.org/3/movie/" + id + "/reviews?api_key="+ APIKey +"");
+
+        } catch(MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
     /**
      * This method returns the entire result from the HTTP response.
      *
