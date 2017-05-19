@@ -57,6 +57,51 @@ public final class OpenMovieJsonUtils {
         return movieReviewData;
     }
 
+    public static String[] getSimpleMovieTrailerFromJson(Context context, String movieTrailerJsonStr)
+            throws JSONException {
+        final String OWM_MESSAGE_CODE = "cod";
+        final String OWM_LIST = "list";
+
+        String[] movieTrailerData = null;
+
+        JSONObject movieTrailerJSON = new JSONObject(movieTrailerJsonStr);
+
+        /* Is there an error? */
+        if (movieTrailerJSON.has(OWM_MESSAGE_CODE)) {
+            int errorCode = movieTrailerJSON.getInt(OWM_MESSAGE_CODE);
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    /* Location invalid */
+                    return null;
+                default:
+                    /* Server probably down */
+                    return null;
+            }
+        }
+
+        JSONArray movieTrailerArray = movieTrailerJSON.getJSONArray("results");
+        movieTrailerData = new String[movieTrailerArray.length()];
+        // Loop through the array
+        for (int i = 0; i < movieTrailerArray.length(); i++) {
+
+            JSONObject movieTrailerDetails = movieTrailerArray.getJSONObject(i);
+
+            String trailerID = movieTrailerDetails.getString("id");
+            String trailerKey = movieTrailerDetails.getString("key");
+            String trailerName = movieTrailerDetails.getString("name");
+            String trailerSite = movieTrailerDetails.getString("site");
+            String trailerSize = movieTrailerDetails.getString("size");
+            String trailerType = movieTrailerDetails.getString("type");
+
+            movieTrailerData[i] = "[\"" + trailerID + "\",\"" + trailerKey + "\",\"" + trailerName + "\",\"" + trailerSite + "\",\"" + trailerSize + "\",\"" + trailerType + "\"]";
+        }
+
+        return movieTrailerData;
+    }
+
     public static String[] getSimpleMovieStringsFromJson(Context context, String movieJsonStr)
             throws JSONException {
 

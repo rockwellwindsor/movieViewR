@@ -114,6 +114,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void loadMovieTrailer(String id) {
-        //
+        Intent intent = new Intent(this, TrailerActivity.class);
+        intent.putExtra(Intent.EXTRA_TEXT, id);
+        startActivity(intent);
     }
 }

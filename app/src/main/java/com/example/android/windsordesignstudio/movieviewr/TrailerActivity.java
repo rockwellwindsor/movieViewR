@@ -9,29 +9,29 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.example.android.windsordesignstudio.movieviewr.utilities.NetworkUtils;
 import com.example.android.windsordesignstudio.movieviewr.utilities.OpenMovieJsonUtils;
 
 import java.net.URL;
 
-import static com.example.android.windsordesignstudio.movieviewr.utilities.NetworkUtils.buildReviewUrl;
+import static com.example.android.windsordesignstudio.movieviewr.utilities.NetworkUtils.buildTrailerUrl;
 
 /**
- * Created by rockwellrice on 5/11/17.
+ * Created by rockwellrice on 5/18/17.
  */
 
-public class ReviewActivity extends AppCompatActivity implements MovieReviewAdapter.MovieReviewAdapterOnClickHandler {
+public class TrailerActivity extends AppCompatActivity implements MovieTrailerAdapter.MovieTrailerAdapterOnClickHandler {
 
-    private static final String TAG = ReviewActivity.class.getSimpleName();
+    private static final String TAG = TrailerActivity.class.getSimpleName();
     public String mMovieID;
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessageDisplay;
-    private TextView mReviewView;
-    private String[] mMovieReviewsData;
     private RecyclerView mRecyclerView;
-    private MovieReviewAdapter mMovieReviewAdapter;
-
+    private VideoView mMovieTrailerView;
+    private MovieTrailerAdapter mMovieTrailerAdapter;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,35 +40,41 @@ public class ReviewActivity extends AppCompatActivity implements MovieReviewAdap
         mErrorMessageDisplay = (TextView) findViewById(R.id.viewr_error_message_display);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movie_reviews);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mMovieReviewAdapter = new MovieReviewAdapter(this);
+        mMovieTrailerAdapter = new MovieTrailerAdapter(this);
 
-        mRecyclerView.setAdapter(mMovieReviewAdapter);
+        mRecyclerView.setAdapter(mMovieTrailerAdapter);
 
         Intent intentThatStartedThisActivity = getIntent();
         mMovieID = intentThatStartedThisActivity.getStringExtra(Intent.EXTRA_TEXT);
         // request the reviews from the URL /movie/:id/reviews
 
-        loadMovieReview(mMovieID);
+        loadMovieTraier(mMovieID);
+    }
+
+    @Override
+    public void onClick(String movieTrailer) {
+
     }
 
     /**
      * This method will get the user's preferred for displaying the movies.  Currently
      * only two options available: popular movies and highest rated movies.
      */
-    private void loadMovieReview(String id) {
-        showMovieReviewDataView();
+    private void loadMovieTraier(String id) {
+        showMovieTrailerDataView();
         String queryID = id; // get reviews for movie
-        new FetchMovieReviewTask().execute(queryID);
+        new FetchMovieTrailerTask().execute(queryID);
     }
 
     private void showErrorMessage() {
         /* First, hide the currently visible data */
-        mRecyclerView.setVisibility(View.INVISIBLE);
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
         /* Then, show the error */
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
@@ -80,39 +86,34 @@ public class ReviewActivity extends AppCompatActivity implements MovieReviewAdap
      * Since it is okay to redundantly set the visibility of a View, we don't
      * need to check whether each view is currently visible or invisible.
      */
-    private void showMovieReviewDataView() {
+    private void showMovieTrailerDataView() {
         /* First, make sure the error is invisible */
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         /* Then, make sure the weather data is visible */
-        mRecyclerView.setVisibility(View.VISIBLE);
+        mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onClick(String movieReview) {
-
-    }
-
-    public class FetchMovieReviewTask extends AsyncTask<String, Void, String[]> {
+    public class FetchMovieTrailerTask extends AsyncTask<String, Void, String[]> {
         // Set the loader animation
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+//            mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected String[] doInBackground(String... params) {
             String url = params[0].toString();
-            URL movieReviewRequestUrl = buildReviewUrl(url);
+            URL movieTrailerRequestUrl = buildTrailerUrl(url);
 
             try {
-                String jsonMovieReviewResponse = NetworkUtils
-                        .getResponseFromHttpUrl(movieReviewRequestUrl);
+                String jsonMovieTrailerResponse = NetworkUtils
+                        .getResponseFromHttpUrl(movieTrailerRequestUrl);
 
-                String[] simpleJsonMovieReviewData = OpenMovieJsonUtils
-                        .getSimpleMovieReviewFromJson(ReviewActivity.this, jsonMovieReviewResponse);
+                String[] simpleJsonMovieTrailerData = OpenMovieJsonUtils
+                        .getSimpleMovieTrailerFromJson(TrailerActivity.this, jsonMovieTrailerResponse);
 
-                return simpleJsonMovieReviewData;
+                return simpleJsonMovieTrailerData;
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -126,14 +127,14 @@ public class ReviewActivity extends AppCompatActivity implements MovieReviewAdap
         * movieReviewData is the value returned from line 130 above.
         *
          */
-        protected void onPostExecute(String[] movieReviewData) {
+        protected void onPostExecute(String[] movieTrailerData) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (movieReviewData != null) {
-                showMovieReviewDataView();
-                mMovieReviewAdapter.setMovieReviewData(movieReviewData);
+            if (movieTrailerData != null) {
+                mMovieTrailerAdapter.setMovieTrailerData(movieTrailerData);
             } else {
                 showErrorMessage();
             }
         }
     }
+
 }

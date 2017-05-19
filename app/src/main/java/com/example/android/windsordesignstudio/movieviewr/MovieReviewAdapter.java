@@ -88,7 +88,6 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     @Override
     public int getItemCount() {
         if (null == mMovieReviewData) return 0;
-        Log.d(TAG, "HERE 1 : " + mMovieReviewData.length);
         return mMovieReviewData.length;
     }
 
@@ -103,7 +102,6 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
      */
     public void setMovieReviewData(String[] movieReviewData) {
         mMovieReviewData = movieReviewData;
-        Log.d(TAG, "HERE 2 : " + mMovieReviewData.length);
         notifyDataSetChanged();
     }
 }
