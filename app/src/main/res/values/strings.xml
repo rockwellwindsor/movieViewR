@@ -10,4 +10,5 @@
 
     <string name="view_trailer">View Trailer</string>
     <string name="view_reviews">View reviews</string>
+    <string name="add_favorite">Add to Favorites</string>
 </resources>

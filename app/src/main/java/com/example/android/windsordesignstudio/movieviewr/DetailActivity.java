@@ -1,14 +1,19 @@
 package com.example.android.windsordesignstudio.movieviewr;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.android.windsordesignstudio.movieviewr.data.FavoritesContract;
+import com.example.android.windsordesignstudio.movieviewr.data.FavoritesDBHelper;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -26,7 +31,9 @@ public class DetailActivity extends AppCompatActivity {
     public TextView mMovieDescription;
     public Button mViewTrailerButton;
     public Button mViewReviewsButton;
+    public Button mSaveAsFavoriteButton;
     public TextView mDisplayReviewsTextView;
+    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +48,11 @@ public class DetailActivity extends AppCompatActivity {
         mMovieImage = (ImageView) findViewById(R.id.viewr_display_movie_image);
         mViewTrailerButton = (Button) findViewById(R.id.view_trailer_button);
         mViewReviewsButton = (Button) findViewById(R.id.view_reviews_button);
+        mSaveAsFavoriteButton = (Button) findViewById(R.id.view_add_favorite_button);
         mDisplayReviewsTextView = (TextView) findViewById(R.id.viewr_display_movie_review);
+
+        FavoritesDBHelper dbHelper = new FavoritesDBHelper(this);
+        mDb = dbHelper.getWritableDatabase();
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -79,7 +90,6 @@ public class DetailActivity extends AppCompatActivity {
 
         // set onclick listener for the buttons
         mViewTrailerButton = (Button) findViewById(R.id.view_trailer_button);
-
         mViewTrailerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
@@ -105,6 +115,50 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+        mSaveAsFavoriteButton = (Button) findViewById(R.id.view_add_favorite_button);
+        mSaveAsFavoriteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                try {
+                    JSONArray jsonArray = new JSONArray(mMovie);
+                    addToFavorites(mMovie);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void addToFavorites(String movie) {
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(movie);
+            String movieTitle = jsonArray.getString(0);
+            String posterPath = jsonArray.getString(1);
+            String averageRating = jsonArray.getString(2);
+            String plot = jsonArray.getString(3);
+            String releaseDate = jsonArray.getString(4);
+            String movieID = jsonArray.getString(5);
+
+            // Enter into database
+            ContentValues cv = new ContentValues();
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_MOVIE_ID, movieID);
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_MOVIE_TITLE, movieTitle);
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_POSTER_FULL_PATH, posterPath);
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_VOTE_AVERAGE, averageRating);
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_PLOT, plot);
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_RELEASE_DATE, releaseDate);
+
+            long rowInserted = mDb.insert(FavoritesContract.FavoriteEntry.TABLE_NAME, null, cv);
+            Context context = getApplicationContext();
+
+            if(rowInserted != -1) {
+                Toast.makeText(context, "" + movieTitle + " has been added to your favorites.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadMovieReviews(String id) {

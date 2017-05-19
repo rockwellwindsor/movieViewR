@@ -53,10 +53,8 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
             try {
                 JSONArray jsonArray = new JSONArray(selectedMovieTrailer);
                 mClickHandler.onClick(selectedMovieTrailer);
-                if (jsonArray.getString(1) == "YouTube") {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + jsonArray.getString(1)));
-                    context.startActivity(intent);
-                }
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + jsonArray.getString(1)));
+                context.startActivity(intent);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
