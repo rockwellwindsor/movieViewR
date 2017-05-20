@@ -31,7 +31,7 @@ import java.net.URL;
 
 import static com.example.android.windsordesignstudio.movieviewr.utilities.NetworkUtils.buildUrl;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler,
+public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler,MovieFavoritesAdapter.MovieFavoritesAdapterOnClickHandler,
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = MainActivity.class.getSimpleName();

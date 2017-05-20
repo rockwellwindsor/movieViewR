@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.android.windsordesignstudio.movieviewr.data.FavoritesContract;
 import com.squareup.picasso.Picasso;
@@ -16,46 +15,60 @@ import com.squareup.picasso.Picasso;
  * Created by rockwellrice on 5/19/17.
  */
 
-public class MovieFavoritesAdapter extends RecyclerView.Adapter<MovieFavoritesAdapter.FavoriteViewHolder> {
+public class MovieFavoritesAdapter extends RecyclerView.Adapter<MovieFavoritesAdapter.MovieFavoritesAdapterViewHolder> {
 
     private static final String TAG = MovieFavoritesAdapter.class.getSimpleName();
     private Cursor mCursor;
     private Context mContext;
+    private final MovieFavoritesAdapterOnClickHandler mClickHandler;
 
-    public MovieFavoritesAdapter(Context mContext) {
-        this.mContext = mContext;
+    public MovieFavoritesAdapter(MovieFavoritesAdapterOnClickHandler clickHandler) {
+        mClickHandler = clickHandler;
     }
 
-    public class MovieFavoritesAdapterViewHolder extends RecyclerView.ViewHolder {
-        TextView mMovieTitle;
-        ImageView mMoviePoster;
+
+    public interface MovieFavoritesAdapterOnClickHandler {
+        void onClick(String movie);
+    }
+
+    public class MovieFavoritesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public final ImageView mMoviePoster;
 
         public MovieFavoritesAdapterViewHolder(View itemView) {
             super(itemView);
             mMoviePoster = (ImageView) itemView.findViewById(R.id.viewr_movie_data_poster);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            String selectedMovie = "Selected Movie";
+            mClickHandler.onClick(selectedMovie);
         }
     }
 
-    public MovieFavoritesAdapter(FavoritesActivity favoritesActivity, Cursor cursor) {
-        this.mContext = favoritesActivity;
-        this.mCursor = cursor;
-    }
-
     @Override
-    public FavoriteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MovieFavoritesAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Inflate the task_layout to a view
-        View view = LayoutInflater.from(mContext).inflate(R.layout.movie_favorite_item, parent, false);
+        Context context = parent.getContext();
 
-        return new FavoriteViewHolder(view);
+        int layoutIdForListItem = R.layout.movie_favorite_item;
+        LayoutInflater inflater = LayoutInflater.from(context);
+        boolean shouldAttachToParentImmediately = false;
+
+        View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
+        return new MovieFavoritesAdapterViewHolder(view);
     }
 
-    public void onBindViewHolder(FavoriteViewHolder holder, int position) {
+    public void onBindViewHolder(MovieFavoritesAdapterViewHolder holder, int position) {
         // Move the mCursor to the position of the item to be displayed
         if (!mCursor.moveToPosition(position))
             return; // bail if returned null
 
+        Context context = holder.mMoviePoster.getContext();
         String moviePoster = mCursor.getString(mCursor.getColumnIndex(FavoritesContract.FavoriteEntry.COLUMN_POSTER_FULL_PATH));
-        ImageView poster = holder.favoriteMoviePoster;
+        ImageView poster = holder.mMoviePoster;
         Picasso.with(mContext).load(moviePoster).resize(600, 900).into(poster);
     }
 

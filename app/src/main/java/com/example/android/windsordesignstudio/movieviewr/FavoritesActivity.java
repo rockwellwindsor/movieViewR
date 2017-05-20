@@ -58,7 +58,7 @@ public class FavoritesActivity extends AppCompatActivity {
          * The MovieAdapter is responsible for linking our movie data with the Views that
          * will end up displaying our movie data.
          */
-        mFavoritesMovieAdapter = new MovieFavoritesAdapter(this, cursor);
+//        mFavoritesMovieAdapter = new MovieFavoritesAdapter(this);
         /*
          * The ProgressBar that will indicate to the user that we are loading data. It will be
          * hidden when no data is loading.
@@ -69,7 +69,7 @@ public class FavoritesActivity extends AppCompatActivity {
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
-        mRecyclerView.setAdapter(mFavoritesMovieAdapter);
+//        mRecyclerView.setAdapter(mFavoritesMovieAdapter);
 
     }
 

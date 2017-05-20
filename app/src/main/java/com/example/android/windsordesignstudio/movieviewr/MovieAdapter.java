@@ -1,6 +1,7 @@
 package com.example.android.windsordesignstudio.movieviewr;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.android.windsordesignstudio.movieviewr.data.FavoritesContract;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -27,10 +29,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private String[] mMovieData;
     private final MovieAdapterOnClickHandler mClickHandler;
 
+    // Class variables for the Cursor that holds task data and the Context
+    private Cursor mCursor;
+    private Context mContext;
+
 
     public interface MovieAdapterOnClickHandler {
         void onClick(String movie);
     }
+
 
     public MovieAdapter(MovieAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
@@ -110,5 +117,28 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         mMovieData = movieData;
         notifyDataSetChanged();
     }
+    /**
+     * When data changes and a re-query occurs, this function swaps the old Cursor
+     * with a newly updated Cursor (Cursor c) that is passed in.
+     */
+    public Cursor swapCursor(Cursor c) {
+        // check if this cursor is the same as the previous cursor (mCursor)
+        if (mCursor == c) {
+            return null; // bc nothing has changed
+        }
+        Cursor temp = mCursor;
+        this.mCursor = c; // new cursor value assigned
 
+        //check if this is a valid cursor, then update the cursor
+        if (c != null) {
+            this.notifyDataSetChanged();
+        }
+        return temp;
+    }
+
+    public void showFavorites() {
+        // Indices for the _id, description, and priority columns
+        int idIndex = mCursor.getColumnIndex(FavoritesContract.FavoriteEntry._ID);
+        int movieID = mCursor.getColumnIndex(FavoritesContract.FavoriteEntry.COLUMN_MOVIE_ID);
+    }
 }
