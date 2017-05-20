@@ -22,7 +22,7 @@ public class NetworkUtils {
 
     // The format we want our API to return
     private static final String format = "json";
-    private static final String APIKey = "3c6092d60715cfad623d1afe909fe090";
+    private static final String APIKey = "";
 
     /**
      * Builds the URL used to talk to the movie API.

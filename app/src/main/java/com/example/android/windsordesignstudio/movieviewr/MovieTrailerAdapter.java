@@ -77,14 +77,17 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
         String movie = mMovieTrailerData[position];
 
         Context nameContext = holder.mTrailerName.getContext();
-//        Context reviewContext = holder.mReview.getContext();
 
         try {
             JSONArray jsonArray = new JSONArray(movie);
+
             try {
                 // Set the text for the view here
                 String text = "http://www.youtube.com/v/" + jsonArray.getString(1);
-                holder.mTrailerName.setText(text);
+                String movieTitle = "" + jsonArray.getString(2) + " - " + jsonArray.getString(5) + "";
+
+                holder.mTrailerName.setText(movieTitle);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
