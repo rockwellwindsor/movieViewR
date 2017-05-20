@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -148,10 +149,12 @@ public class DetailActivity extends AppCompatActivity {
             cv.put(FavoritesContract.FavoriteEntry.COLUMN_PLOT, plot);
             cv.put(FavoritesContract.FavoriteEntry.COLUMN_RELEASE_DATE, releaseDate);
 
-            long rowInserted = mDb.insert(FavoritesContract.FavoriteEntry.TABLE_NAME, null, cv);
-            Context context = getApplicationContext();
+            Uri uri = getContentResolver().insert(FavoritesContract.FavoriteEntry.CONTENT_URI, cv);
 
-            if(rowInserted != -1) {
+//            long rowInserted = mDb.insert(FavoritesContract.FavoriteEntry.TABLE_NAME, null, cv);
+            Context context = getApplicationContext();
+//
+            if(uri != null) {
                 Toast.makeText(context, "" + movieTitle + " has been added to your favorites.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();

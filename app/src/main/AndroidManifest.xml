@@ -40,6 +40,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DetailActivity" />
         </activity>
+        <activity
+            android:name=".FavoritesActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FavoritesActivity" />
+        </activity>
+        <provider
+            android:name="com.example.android.windsordesignstudio.movieviewr.data.FavoritesContentProvider"
+            android:authorities="com.example.android.movieviewr"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

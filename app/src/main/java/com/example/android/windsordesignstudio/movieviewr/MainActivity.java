@@ -2,6 +2,7 @@ package com.example.android.windsordesignstudio.movieviewr;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -16,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.windsordesignstudio.movieviewr.MovieAdapter.MovieAdapterOnClickHandler;
+import com.example.android.windsordesignstudio.movieviewr.data.FavoritesDBHelper;
 import com.example.android.windsordesignstudio.movieviewr.utilities.NetworkUtils;
 import com.example.android.windsordesignstudio.movieviewr.utilities.OpenMovieJsonUtils;
 
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
     private Toolbar toolbar;
+    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +65,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 if (mPosition == 1) {
                     // Show highest rated movies
                     loadMovieData("top_rated");
-                } else if (mPosition == 3) {
-                    // Show favorites
-                    loadMovieData("favorites");
+                } else if (mPosition == 2) {
+                    // Show favorites activity
+                    Context context = getApplicationContext();
+                    Class destinationClass = FavoritesActivity.class;
+                    Intent intentToStartFavoritesActivity = new Intent(context, destinationClass);
+                    startActivity(intentToStartFavoritesActivity);
                 } else {
                     // Show popular movies
                     loadMovieData("popular");
@@ -106,6 +112,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
         mRecyclerView.setAdapter(mMovieAdapter);
 
+        FavoritesDBHelper dbHelper = new FavoritesDBHelper(this);
+        mDb = dbHelper.getWritableDatabase();
+
         /*
          * The ProgressBar that will indicate to the user that we are loading data. It will be
          * hidden when no data is loading.
@@ -117,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
 
         loadMovieData("popular"); // Setting popular movies as the default movie filter
     }
+
 
     /**
      * This method is overridden by our MainActivity class in order to handle RecyclerView item
@@ -171,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-
     public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
         // Set the loader animation
         @Override
@@ -183,21 +192,22 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         @Override
         protected String[] doInBackground(String... params) {
             String preference = params[0].toString();
-            URL movieRequestUrl = buildUrl(preference);
 
-            try {
-                String jsonMovieResponse = NetworkUtils
-                    .getResponseFromHttpUrl(movieRequestUrl);
+                URL movieRequestUrl = buildUrl(preference);
 
-                String[] simpleJsonMovieData = OpenMovieJsonUtils
-                    .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
+                try {
+                    String jsonMovieResponse = NetworkUtils
+                            .getResponseFromHttpUrl(movieRequestUrl);
 
-                return simpleJsonMovieData;
+                    String[] simpleJsonMovieData = OpenMovieJsonUtils
+                            .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+                    return simpleJsonMovieData;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
         }
 
         @Override

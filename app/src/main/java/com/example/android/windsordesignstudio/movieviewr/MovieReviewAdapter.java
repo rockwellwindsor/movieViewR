@@ -2,7 +2,6 @@ package com.example.android.windsordesignstudio.movieviewr;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +73,6 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
             JSONArray jsonArray = new JSONArray(movie);
             try {
                 // Set the text for the view here
-                Log.d(TAG, "ANYTHING?");
                 holder.mReviewAuthor.setText(jsonArray.getString(0));
                 holder.mReview.setText(jsonArray.getString(1));
             } catch (Exception e) {
