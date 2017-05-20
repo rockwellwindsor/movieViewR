@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,7 +41,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
+    Log.d(TAG, "HERE : 1");
         // Creating variables for each of the items we need to display
         mMovieTitle = (TextView) findViewById(R.id.viewr_display_movie_title);
         mMovieRating = (TextView) findViewById(R.id.viewr_display_movie_rating);
@@ -54,12 +55,13 @@ public class DetailActivity extends AppCompatActivity {
 
         FavoritesDBHelper dbHelper = new FavoritesDBHelper(this);
         mDb = dbHelper.getWritableDatabase();
-
+        Log.d(TAG, "HERE : 2");
         Intent intentThatStartedThisActivity = getIntent();
 
         if (intentThatStartedThisActivity != null) {
+            Log.d(TAG, "HERE : 3");
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
-
+                Log.d(TAG, "HERE : 4");
                 /*
                 * Getting the context to use picasso to display the image was a little confusing for me.
                 * This solution came from: http://stackoverflow.com/questions/28754499/how-to-get-context-in-an-intent-service
@@ -69,9 +71,11 @@ public class DetailActivity extends AppCompatActivity {
                 Context context = getApplicationContext();
 
                 mMovie = intentThatStartedThisActivity.getStringExtra(Intent.EXTRA_TEXT);
-
+                Log.d(TAG, "HERE : 5" + mMovie);
                 try {
+                    Log.d(TAG, "HERE : 6" + mMovie.getClass().getName());
                     JSONArray jsonArray = new JSONArray(mMovie);
+                    Log.d(TAG, "HERE : 7" + jsonArray);
                     // Display title
                     mMovieTitle.setText(jsonArray.getString(0));
                     // Display the Poster

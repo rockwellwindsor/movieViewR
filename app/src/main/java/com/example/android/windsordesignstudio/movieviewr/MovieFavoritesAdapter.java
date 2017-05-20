@@ -3,6 +3,7 @@ package com.example.android.windsordesignstudio.movieviewr;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +43,28 @@ public class MovieFavoritesAdapter extends RecyclerView.Adapter<MovieFavoritesAd
 
         @Override
         public void onClick(View v) {
+            // Get movie Title
             int adapterPosition = getAdapterPosition();
-            String selectedMovie = "Selected Movie";
-            mClickHandler.onClick(selectedMovie);
+            mCursor.moveToPosition(adapterPosition);
+
+            int movieI = mCursor.getColumnIndex(FavoritesContract.FavoriteEntry.COLUMN_MOVIE_ID);
+            int movieT = mCursor.getColumnIndex(FavoritesContract.FavoriteEntry.COLUMN_MOVIE_TITLE);
+            int moviePO = mCursor.getColumnIndex(FavoritesContract.FavoriteEntry.COLUMN_POSTER_FULL_PATH);
+            int movieV = mCursor.getColumnIndex(FavoritesContract.FavoriteEntry.COLUMN_VOTE_AVERAGE);
+            int moviePL = mCursor.getColumnIndex(FavoritesContract.FavoriteEntry.COLUMN_PLOT);
+            int movieR = mCursor.getColumnIndex(FavoritesContract.FavoriteEntry.COLUMN_RELEASE_DATE);
+
+            String movieID = mCursor.getString(movieI);
+            String movieTitle = mCursor.getString(movieT);
+            String moviePoster = mCursor.getString(moviePO);
+            String movieVoteAverage = mCursor.getString(movieV);
+            String moviePlot = mCursor.getString(moviePL);
+            String movieReleaseDate = mCursor.getString(movieR);
+
+            String mMovieData = "[\"" + movieTitle + "\",\"" + moviePoster + "\",\"" + movieVoteAverage + "\",\"" + moviePlot + "\",\"" + movieReleaseDate + "\",\"" + movieID + "\"]";
+
+            Log.d(TAG, "HERE : " + mMovieData);
+            mClickHandler.onClick(mMovieData);
         }
     }
 
@@ -112,7 +132,6 @@ public class MovieFavoritesAdapter extends RecyclerView.Adapter<MovieFavoritesAd
          */
         public FavoriteViewHolder(View itemView) {
             super(itemView);
-
             favoriteMoviePoster = (ImageView) itemView.findViewById(R.id.viewr_movie_data_poster);
         }
     }
