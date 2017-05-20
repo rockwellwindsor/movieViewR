@@ -60,7 +60,20 @@
                         android:layout_toRightOf="@+id/view_reviews_button"
                         android:background="@color/colorAccent"
                         android:textColor="@color/colorPrimaryDark"
+                        android:visibility="visible"
                         android:text="@string/add_favorite"/>
+
+                    <Button
+                        android:id="@+id/view_remove_favorite_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_below="@+id/viewr_display_movie_image"
+                        android:layout_toRightOf="@+id/view_reviews_button"
+                        android:background="@color/colorPrimaryLight"
+                        android:textColor="#fff"
+                        android:visibility="gone"
+                        android:text="@string/remove_favorite"/>
 
                 </LinearLayout>
 

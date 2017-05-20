@@ -3,7 +3,6 @@ package com.example.android.windsordesignstudio.movieviewr;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,9 +60,8 @@ public class MovieFavoritesAdapter extends RecyclerView.Adapter<MovieFavoritesAd
             String moviePlot = mCursor.getString(moviePL);
             String movieReleaseDate = mCursor.getString(movieR);
 
-            String mMovieData = "[\"" + movieTitle + "\",\"" + moviePoster + "\",\"" + movieVoteAverage + "\",\"" + moviePlot + "\",\"" + movieReleaseDate + "\",\"" + movieID + "\"]";
+            String mMovieData = "[\"" + movieTitle + "\",\"" + moviePoster + "\",\"" + movieVoteAverage + "\",\"" + moviePlot + "\",\"" + movieReleaseDate + "\",\"" + movieID + "\",\" is_favorite\"]";
 
-            Log.d(TAG, "HERE : " + mMovieData);
             mClickHandler.onClick(mMovieData);
         }
     }

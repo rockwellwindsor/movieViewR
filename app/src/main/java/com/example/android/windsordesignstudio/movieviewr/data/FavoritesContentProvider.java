@@ -127,7 +127,35 @@ public class FavoritesContentProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 
-        throw new UnsupportedOperationException("Not yet implemented");
+        // Get access to the database and write URI matching code to recognize a single item
+        final SQLiteDatabase db = mFavoritesDbHelper.getWritableDatabase();
+
+        int match = sUriMatcher.match(uri);
+        // Keep track of the number of deleted tasks
+        int favoriteDeleted; // starts as 0
+
+        // Write the code to delete a single row of data
+        // [Hint] Use selections to delete an item by its row ID
+        switch (match) {
+            // Handle the single item case, recognized by the ID included in the URI path
+            case FAVORITE_WITH_ID:
+                // Get the task ID from the URI path
+                String id = uri.getPathSegments().get(1);
+                // Use selections/selectionArgs to filter for this ID
+                favoriteDeleted = db.delete(TABLE_NAME, "movieID=?", new String[]{id});
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        // Notify the resolver of a change and return the number of items deleted
+        if (favoriteDeleted != 0) {
+            // A task was deleted, set notification
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of tasks deleted
+        return favoriteDeleted;
     }
 
 

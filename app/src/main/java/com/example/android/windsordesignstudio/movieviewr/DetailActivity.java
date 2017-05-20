@@ -3,6 +3,7 @@ package com.example.android.windsordesignstudio.movieviewr;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,14 +35,16 @@ public class DetailActivity extends AppCompatActivity {
     public Button mViewTrailerButton;
     public Button mViewReviewsButton;
     public Button mSaveAsFavoriteButton;
+    public Button mRemoveFromFavoritesButton;
     public TextView mDisplayReviewsTextView;
     private SQLiteDatabase mDb;
+    private static final int TASK_LOADER_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-    Log.d(TAG, "HERE : 1");
+
         // Creating variables for each of the items we need to display
         mMovieTitle = (TextView) findViewById(R.id.viewr_display_movie_title);
         mMovieRating = (TextView) findViewById(R.id.viewr_display_movie_rating);
@@ -51,17 +54,18 @@ public class DetailActivity extends AppCompatActivity {
         mViewTrailerButton = (Button) findViewById(R.id.view_trailer_button);
         mViewReviewsButton = (Button) findViewById(R.id.view_reviews_button);
         mSaveAsFavoriteButton = (Button) findViewById(R.id.view_add_favorite_button);
+        mRemoveFromFavoritesButton = (Button) findViewById(R.id.view_remove_favorite_button);
         mDisplayReviewsTextView = (TextView) findViewById(R.id.viewr_display_movie_review);
 
         FavoritesDBHelper dbHelper = new FavoritesDBHelper(this);
         mDb = dbHelper.getWritableDatabase();
-        Log.d(TAG, "HERE : 2");
+
         Intent intentThatStartedThisActivity = getIntent();
 
         if (intentThatStartedThisActivity != null) {
-            Log.d(TAG, "HERE : 3");
+
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
-                Log.d(TAG, "HERE : 4");
+
                 /*
                 * Getting the context to use picasso to display the image was a little confusing for me.
                 * This solution came from: http://stackoverflow.com/questions/28754499/how-to-get-context-in-an-intent-service
@@ -71,11 +75,17 @@ public class DetailActivity extends AppCompatActivity {
                 Context context = getApplicationContext();
 
                 mMovie = intentThatStartedThisActivity.getStringExtra(Intent.EXTRA_TEXT);
-                Log.d(TAG, "HERE : 5" + mMovie);
+
                 try {
-                    Log.d(TAG, "HERE : 6" + mMovie.getClass().getName());
                     JSONArray jsonArray = new JSONArray(mMovie);
-                    Log.d(TAG, "HERE : 7" + jsonArray);
+
+                    boolean records = checkRecord(jsonArray.getString(5));
+
+                    if(records == true) {
+                        mSaveAsFavoriteButton.setVisibility(View.GONE);
+                        mRemoveFromFavoritesButton.setVisibility(View.VISIBLE);
+                    }
+
                     // Display title
                     mMovieTitle.setText(jsonArray.getString(0));
                     // Display the Poster
@@ -131,6 +141,48 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mRemoveFromFavoritesButton = (Button) findViewById(R.id.view_remove_favorite_button);
+        mRemoveFromFavoritesButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                try {
+                    JSONArray jsonArray = new JSONArray(mMovie);
+                    removeFromFavorites(mMovie);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public boolean checkRecord(String id) {
+
+        String selectString = "SELECT * FROM favorites WHERE movieID =?";
+
+        // Add the String you are searching by here.
+        // Put it in an array to avoid an unrecognized token error
+        Cursor cursor = mDb.rawQuery(selectString, new String[] {id});
+
+        boolean hasObject = false;
+        if(cursor.moveToFirst()){
+            hasObject = true;
+
+            //region if you had multiple records to check for, use this region.
+
+            int count = 0;
+            while(cursor.moveToNext()){
+                count++;
+            }
+            //here, count is records found
+            Log.d(TAG, String.format("%d records found", count));
+
+            //endregion
+
+        }
+
+        cursor.close();          // Dont forget to close your cursor
+        mDb.close();              //AND your Database!
+        return hasObject;
     }
 
     public void addToFavorites(String movie) {
@@ -155,11 +207,12 @@ public class DetailActivity extends AppCompatActivity {
 
             Uri uri = getContentResolver().insert(FavoritesContract.FavoriteEntry.CONTENT_URI, cv);
 
-//            long rowInserted = mDb.insert(FavoritesContract.FavoriteEntry.TABLE_NAME, null, cv);
             Context context = getApplicationContext();
-//
+
             if(uri != null) {
                 Toast.makeText(context, "" + movieTitle + " has been added to your favorites.", Toast.LENGTH_SHORT).show();
+                mSaveAsFavoriteButton.setVisibility(View.GONE);
+                mRemoveFromFavoritesButton.setVisibility(View.VISIBLE);
             } else {
                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
@@ -168,6 +221,45 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    public void removeFromFavorites(String movie) {
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(movie);
+            String movieTitle = jsonArray.getString(0);
+            String posterPath = jsonArray.getString(1);
+            String averageRating = jsonArray.getString(2);
+            String plot = jsonArray.getString(3);
+            String releaseDate = jsonArray.getString(4);
+            String movieID = jsonArray.getString(5);
+
+            // Enter into database
+            ContentValues cv = new ContentValues();
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_MOVIE_ID, movieID);
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_MOVIE_TITLE, movieTitle);
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_POSTER_FULL_PATH, posterPath);
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_VOTE_AVERAGE, averageRating);
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_PLOT, plot);
+            cv.put(FavoritesContract.FavoriteEntry.COLUMN_RELEASE_DATE, releaseDate);
+
+            String id = movieID;
+            Uri query = FavoritesContract.FavoriteEntry.CONTENT_URI;
+            query = query.buildUpon().appendPath(id).build();
+
+            int recordDelete = getContentResolver().delete(query, null, null);
+
+            Context context = getApplicationContext();
+
+            if(recordDelete > 0) {
+                Toast.makeText(context, "" + movieTitle + " has been removed from your favorites.", Toast.LENGTH_SHORT).show();
+                mSaveAsFavoriteButton.setVisibility(View.VISIBLE);
+                mRemoveFromFavoritesButton.setVisibility(View.GONE);
+            } else {
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     private void loadMovieReviews(String id) {
         Intent intent = new Intent(this, ReviewActivity.class);
         intent.putExtra(Intent.EXTRA_TEXT, id);
