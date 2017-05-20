@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import static com.example.android.windsordesignstudio.movieviewr.data.FavoritesContract.FavoriteEntry.TABLE_NAME;
 
@@ -53,7 +52,6 @@ public class FavoritesContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        Log.d(TAG, "HERE : " );
         final SQLiteDatabase db = mFavoritesDbHelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
         Uri returnUri; // URI to be returned
@@ -87,7 +85,36 @@ public class FavoritesContentProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
 
-        throw new UnsupportedOperationException("Not yet implemented");
+        // Get access to underlying database (read-only for query)
+        final SQLiteDatabase db = mFavoritesDbHelper.getReadableDatabase();
+
+        // Write URI match code and set a variable to return a Cursor
+        int match = sUriMatcher.match(uri);
+        Cursor retCursor;
+
+        // Query for the tasks directory and write a default case
+        switch (match) {
+            // Query for the tasks directory
+            case FAVORITES:
+                retCursor =  db.query(TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+
+            // Default exception
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        // Set a notification URI on the Cursor and return that Cursor
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        // Return the desired Cursor
+        return retCursor;
     }
 
     @Override

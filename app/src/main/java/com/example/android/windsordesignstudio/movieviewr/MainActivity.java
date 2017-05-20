@@ -2,21 +2,27 @@ package com.example.android.windsordesignstudio.movieviewr;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.windsordesignstudio.movieviewr.MovieAdapter.MovieAdapterOnClickHandler;
+import com.example.android.windsordesignstudio.movieviewr.data.FavoritesContract;
 import com.example.android.windsordesignstudio.movieviewr.data.FavoritesDBHelper;
 import com.example.android.windsordesignstudio.movieviewr.utilities.NetworkUtils;
 import com.example.android.windsordesignstudio.movieviewr.utilities.OpenMovieJsonUtils;
@@ -25,15 +31,18 @@ import java.net.URL;
 
 import static com.example.android.windsordesignstudio.movieviewr.utilities.NetworkUtils.buildUrl;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessageDisplay;
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
+    private MovieFavoritesAdapter mMovieFavoritesAdapter;
     private Toolbar toolbar;
     private SQLiteDatabase mDb;
+    private static final int TASK_LOADER_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +72,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 int mPosition = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
                 if (mPosition == 1) {
+                    mRecyclerView.setAdapter(mMovieAdapter);
                     // Show highest rated movies
                     loadMovieData("top_rated");
                 } else if (mPosition == 2) {
-                    // Show favorites activity
-                    Context context = getApplicationContext();
-                    Class destinationClass = FavoritesActivity.class;
-                    Intent intentToStartFavoritesActivity = new Intent(context, destinationClass);
-                    startActivity(intentToStartFavoritesActivity);
+                    loadFavoritesData();
                 } else {
+                    mRecyclerView.setAdapter(mMovieAdapter);
                     // Show popular movies
                     loadMovieData("popular");
                 }
@@ -108,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
          * will end up displaying our movie data.
          */
         mMovieAdapter = new MovieAdapter(this);
+        mMovieFavoritesAdapter = new MovieFavoritesAdapter(this);
 
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
         mRecyclerView.setAdapter(mMovieAdapter);
@@ -125,8 +133,20 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         loadMovieData("popular"); // Setting popular movies as the default movie filter
+        getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
     }
 
+    /**
+     * This method is called after this activity has been paused or restarted.
+     * Often, this is after new data has been inserted through an AddTaskActivity,
+     * so this restarts the loader to re-query the underlying data for any changes.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // re-queries for all tasks
+        getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
+    }
 
     /**
      * This method is overridden by our MainActivity class in order to handle RecyclerView item
@@ -151,6 +171,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         showMovieDataView();
         String typeOfQuery = preference; // Popular and Top-Rated will need to be set onClick
         new FetchMovieTask().execute(typeOfQuery);
+    }
+
+    private void loadFavoritesData() {
+        mRecyclerView.setAdapter(mMovieFavoritesAdapter);
     }
 
     /**
@@ -220,5 +244,82 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 showErrorMessage();
             }
         }
+    }
+
+
+    /**
+     * Instantiates and returns a new AsyncTaskLoader with the given ID.
+     * This loader will return favorites data as a Cursor or null if an error occurs.
+     *
+     * Implements the required callbacks to take care of loading data at all stages of loading.
+     */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
+        return new AsyncTaskLoader<Cursor>(this) {
+
+            // Initialize a Cursor, this will hold all the favorites data
+            Cursor mFavoritesData = null;
+
+            // onStartLoading() is called when a loader first starts loading data
+            @Override
+            protected void onStartLoading() {
+                if (mFavoritesData != null) {
+                    // Delivers any previously loaded data immediately
+                    deliverResult(mFavoritesData);
+                } else {
+                    // Force a new load
+                    forceLoad();
+                }
+            }
+
+            // loadInBackground() performs asynchronous loading of data
+            @Override
+            public Cursor loadInBackground() {
+
+                // Query and load all task data in the background; sort by priority
+                try {
+                    return getContentResolver().query(FavoritesContract.FavoriteEntry.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            FavoritesContract.FavoriteEntry.COLUMN_MOVIE_ID);
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to asynchronously load data.");
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            // deliverResult sends the result of the load, a Cursor, to the registered listener
+            public void deliverResult(Cursor data) {
+                mFavoritesData = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+    /**
+     * Called when a previously created loader has finished its load.
+     *
+     * @param loader The Loader that has finished.
+     * @param data The data generated by the Loader.
+     */
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Update the data that the adapter uses to create ViewHolders
+        mMovieFavoritesAdapter.swapCursor(data);
+    }
+
+
+    /**
+     * Called when a previously created loader is being reset, and thus
+     * making its data unavailable.
+     * onLoaderReset removes any references this activity had to the loader's data.
+     *
+     * @param loader The Loader that is being reset.
+     */
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mMovieFavoritesAdapter.swapCursor(null);
     }
 }

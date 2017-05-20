@@ -27,6 +27,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private String[] mMovieData;
     private final MovieAdapterOnClickHandler mClickHandler;
 
+
     public interface MovieAdapterOnClickHandler {
         void onClick(String movie);
     }
@@ -109,4 +110,5 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         mMovieData = movieData;
         notifyDataSetChanged();
     }
+
 }
