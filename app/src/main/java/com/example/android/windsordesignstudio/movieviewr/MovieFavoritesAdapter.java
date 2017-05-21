@@ -87,7 +87,7 @@ public class MovieFavoritesAdapter extends RecyclerView.Adapter<MovieFavoritesAd
         Context context = holder.mMoviePoster.getContext();
         String moviePoster = mCursor.getString(mCursor.getColumnIndex(FavoritesContract.FavoriteEntry.COLUMN_POSTER_FULL_PATH));
         ImageView poster = holder.mMoviePoster;
-        Picasso.with(mContext).load(moviePoster).resize(600, 900).into(poster);
+        Picasso.with(context).load(moviePoster).resize(600, 900).into(poster);
     }
 
     @Override
